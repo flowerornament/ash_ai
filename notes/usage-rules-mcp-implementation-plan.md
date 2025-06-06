@@ -259,10 +259,30 @@ end
   - Test environment resource discovery patterns
 - All tests passing with 100% success rate
 
+### ✅ Phase 2 Complete: Enhanced Integration (2025-01-07)
+
+**Commit:** `1aba1fc` - "feat: add list_packages_with_rules MCP tool"
+
+**What was accomplished:**
+- Added `list_packages_with_rules` action to `lib/ash_ai/dev_tools/tools.ex`
+- Registered new tool in `lib/ash_ai/dev_tools.ex` domain for MCP exposure
+- Added comprehensive test coverage for the new action
+- Focused on read-only discovery functionality (excluded `sync_usage_rules` after discussion)
+- Clean, focused API for package discovery without project modification
+
+**Design Decisions:**
+- **Excluded sync_usage_rules**: Determined that syncing is a manual project maintenance task, not something AI assistants should do automatically
+- **Read-only approach**: Both tools (`get_package_rules` and `list_packages_with_rules`) are purely for discovery and consumption
+- **Simple interface**: `list_packages_with_rules` returns just package names as strings for easy consumption
+
+**Verification:**
+- All 17 tests passing including new functionality
+- Clean separation of concerns between discovery and consumption
+- Consistent with existing dev tools patterns
+
 **Next Steps:**
-- Phase 2: Enhanced integration with additional convenience actions
-- Add `list_packages_with_rules` and `sync_usage_rules` actions
-- Test MCP protocol integration
+- Test MCP protocol integration manually
+- Consider additional convenience features if needed
 
 ## Benefits of This Approach
 
