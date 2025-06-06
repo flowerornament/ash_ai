@@ -101,6 +101,22 @@ defmodule AshAi.DevTools.Tools do
       end
     end
 
+    action :list_packages_with_rules, {:array, :string} do
+      description """
+      Lists all packages in this project that have usage-rules.md files.
+      Use this to discover which packages provide usage guidance.
+      """
+
+      run fn _input, _ ->
+        Mix.Project.deps_paths()
+        |> Enum.filter(fn {_name, path} ->
+          Path.join(path, "usage-rules.md") |> File.exists?()
+        end)
+        |> Enum.map(fn {name, _path} -> to_string(name) end)
+        |> then(&{:ok, &1})
+      end
+    end
+
     action :list_generators, {:array, Task} do
       description """
       Lists available igniter generators. Run with `mix <task_name>`. Pass `--dry-run` to see what the effects will be. Always pass `--yes` when running to accept changes automatically

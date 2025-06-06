@@ -89,6 +89,38 @@ defmodule AshAi.DevTools.ToolsTest do
     end
   end
 
+  describe "list_packages_with_rules action" do
+    test "returns list of packages that have usage-rules.md files" do
+      {:ok, results} =
+        AshAi.DevTools.Tools
+        |> Ash.ActionInput.for_action(:list_packages_with_rules, %{})
+        |> Ash.run_action()
+
+      assert is_list(results)
+
+      # Should be a list of strings (package names)
+      Enum.each(results, fn package ->
+        assert is_binary(package)
+      end)
+
+      # If we have packages with rules, verify they actually exist
+      if length(results) > 0 do
+        # Pick first package and verify it has rules
+        first_package = List.first(results)
+
+        # Verify this package actually has usage-rules.md
+        deps_paths = Mix.Project.deps_paths()
+
+        {_name, path} =
+          Enum.find(deps_paths, fn {name, _} ->
+            to_string(name) == first_package
+          end) || raise("Package #{first_package} not found in deps")
+
+        assert File.exists?(Path.join(path, "usage-rules.md"))
+      end
+    end
+  end
+
   describe "list_ash_resources action" do
     test "returns list of resources with domains" do
       {:ok, results} =
@@ -183,6 +215,13 @@ defmodule AshAi.DevTools.ToolsTest do
       assert action.description =~ "domains"
     end
 
+    test "list_packages_with_rules has appropriate description" do
+      action = Ash.Resource.Info.action(AshAi.DevTools.Tools, :list_packages_with_rules)
+
+      assert action.description =~ "packages"
+      assert action.description =~ "usage-rules.md"
+    end
+
     test "list_generators has appropriate description" do
       action = Ash.Resource.Info.action(AshAi.DevTools.Tools, :list_generators)
 
@@ -238,4 +277,3 @@ defmodule AshAi.DevTools.ToolsTest do
     end
   end
 end
-

@@ -16,6 +16,10 @@ defmodule AshAi.DevTools do
       """
     end
 
+    tool :list_packages_with_rules, AshAi.DevTools.Tools, :list_packages_with_rules do
+      description "List all packages that have usage-rules.md files"
+    end
+
     tool :list_generators, AshAi.DevTools.Tools, :list_generators do
       description "List available generators and their documentation"
     end
