@@ -9,9 +9,9 @@ defmodule AshAi.DevTools do
       description "List all Ash resources in the app along with their domains"
     end
 
-    tool :get_package_rules, AshAi.DevTools.Tools, :get_package_rules do
+    tool :get_usage_rules, AshAi.DevTools.Tools, :get_usage_rules do
       description """
-      Get package rules for the provided packages.
+      Get usage rules for the provided packages.
       Do this early as soon as you see that you are working with a given package.
       """
     end

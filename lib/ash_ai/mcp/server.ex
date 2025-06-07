@@ -365,7 +365,7 @@ defmodule AshAi.Mcp.Server do
         |> Keyword.put(:tools, [
           :list_ash_resources,
           :list_generators,
-          :get_package_rules,
+          :get_usage_rules,
           :list_packages_with_rules
         ])
       else

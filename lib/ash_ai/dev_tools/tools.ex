@@ -63,16 +63,16 @@ defmodule AshAi.DevTools.Tools do
       end
     end
 
-    action :get_package_rules, {:array, UsageRules} do
+    action :get_usage_rules, {:array, UsageRules} do
       description """
-      Lists the rules for the provided packages.
+      Lists the usage rules for the provided packages.
       Use this to discover how packages are intended to be used.
       Not all packages have rules, but when they do they are stored in a `usage-rules.md` file.
       """
 
       argument :packages, {:array, :string} do
         allow_nil? false
-        description "The packages to get rules for"
+        description "The packages to get usage rules for"
       end
 
       run fn input, _ ->

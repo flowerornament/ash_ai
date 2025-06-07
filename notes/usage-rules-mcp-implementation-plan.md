@@ -22,7 +22,7 @@ Integrate usage rules functionality into ash_ai's development MCP server by expo
 - [x] Uncomment existing implementation in `lib/ash_ai/dev_tools/tools.ex` (lines 66-102)
 - [x] Fix type reference from `PackageRules` to `UsageRules` 
 - [x] Update tool registration in `lib/ash_ai/dev_tools.ex`
-- [x] Test basic `get_package_rules` functionality works
+- [x] Test basic `get_usage_rules` functionality works
 - [x] Verify successful package rules retrieval (found 5+ packages with rules)
 
 ### Step 2: Add Package Discovery ✅ **COMPLETED**
@@ -62,8 +62,8 @@ Integrate usage rules functionality into ash_ai's development MCP server by expo
 ```elixir
 # Two main tools exposed via MCP:
 
-action :get_package_rules, {:array, UsageRules} do
-  argument :packages, {:array, :string}, description: "Package names to get rules for"
+action :get_usage_rules, {:array, UsageRules} do
+  argument :packages, {:array, :string}, description: "Package names to get usage rules for"
   # Returns: [%{package: "ash", rules: "...markdown content..."}]
 end
 
@@ -75,7 +75,7 @@ end
 ## Success Criteria
 
 - AI assistants can discover which packages have usage rules via `list_packages_with_rules`
-- AI assistants can retrieve specific package rules via `get_package_rules`
+- AI assistants can retrieve specific package rules via `get_usage_rules`
 - Tools integrate seamlessly with existing MCP development server
 - Zero performance impact on normal development workflow (read-only operations)
 - 100% test coverage maintained for all functionality
@@ -91,7 +91,7 @@ end
 
 ### Current Status Summary
 **Implementation complete** ✅
-- Both MCP tools (`get_package_rules` and `list_packages_with_rules`) implemented and tested
+- Both MCP tools (`get_usage_rules` and `list_packages_with_rules`) implemented and tested
 - 17 comprehensive tests covering all scenarios and edge cases
 - Clean, focused read-only API design
 - Successfully integrated with existing ash_ai patterns

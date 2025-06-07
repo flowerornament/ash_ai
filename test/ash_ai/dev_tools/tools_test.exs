@@ -1,11 +1,11 @@
 defmodule AshAi.DevTools.ToolsTest do
   use ExUnit.Case, async: true
 
-  describe "get_package_rules action" do
+  describe "get_usage_rules action" do
     test "returns rules for packages with usage-rules.md files" do
       {:ok, results} =
         AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{packages: ["ash"]})
+        |> Ash.ActionInput.for_action(:get_usage_rules, %{packages: ["ash"]})
         |> Ash.run_action()
 
       assert is_list(results)
@@ -19,7 +19,7 @@ defmodule AshAi.DevTools.ToolsTest do
     test "returns multiple results for multiple packages with rules" do
       {:ok, results} =
         AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{
+        |> Ash.ActionInput.for_action(:get_usage_rules, %{
           packages: ["ash", "ash_postgres", "igniter"]
         })
         |> Ash.run_action()
@@ -37,7 +37,7 @@ defmodule AshAi.DevTools.ToolsTest do
     test "returns empty list for packages without usage-rules.md" do
       {:ok, results} =
         AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{packages: ["non_existent_package"]})
+        |> Ash.ActionInput.for_action(:get_usage_rules, %{packages: ["non_existent_package"]})
         |> Ash.run_action()
 
       assert results == []
@@ -46,7 +46,7 @@ defmodule AshAi.DevTools.ToolsTest do
     test "filters out packages without rules from mixed list" do
       {:ok, results} =
         AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{
+        |> Ash.ActionInput.for_action(:get_usage_rules, %{
           packages: ["ash", "non_existent_package"]
         })
         |> Ash.run_action()
@@ -61,7 +61,7 @@ defmodule AshAi.DevTools.ToolsTest do
     test "handles empty package list" do
       {:ok, results} =
         AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{packages: []})
+        |> Ash.ActionInput.for_action(:get_usage_rules, %{packages: []})
         |> Ash.run_action()
 
       assert results == []
@@ -166,8 +166,8 @@ defmodule AshAi.DevTools.ToolsTest do
   end
 
   describe "action descriptions and metadata" do
-    test "get_package_rules has appropriate description" do
-      action = Ash.Resource.Info.action(AshAi.DevTools.Tools, :get_package_rules)
+    test "get_usage_rules has appropriate description" do
+      action = Ash.Resource.Info.action(AshAi.DevTools.Tools, :get_usage_rules)
 
       assert action.description =~ "rules"
       assert action.description =~ "packages"
@@ -201,7 +201,7 @@ defmodule AshAi.DevTools.ToolsTest do
       # This should not raise an error when used in action results
       {:ok, results} =
         AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{packages: []})
+        |> Ash.ActionInput.for_action(:get_usage_rules, %{packages: []})
         |> Ash.run_action()
 
       assert is_list(results)
