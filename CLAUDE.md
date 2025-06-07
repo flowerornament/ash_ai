@@ -17,9 +17,6 @@ mix test test/path/to/test_file.exs
 
 # Run a specific test by line number
 mix test test/path/to/test_file.exs:42
-
-# Watch tests (requires mix_test_watch)
-mix test.watch
 ```
 
 ### Code Quality
