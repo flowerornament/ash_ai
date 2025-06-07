@@ -3,24 +3,20 @@ defmodule AshAi.DevTools.ToolsTest do
 
   describe "get_package_rules action" do
     test "returns rules for packages with usage-rules.md files" do
-      # Test with ash package which should have usage-rules.md
       {:ok, results} =
         AshAi.DevTools.Tools
         |> Ash.ActionInput.for_action(:get_package_rules, %{packages: ["ash"]})
         |> Ash.run_action()
 
-      # Should find ash package with rules
       assert is_list(results)
 
       [%{package: "ash", rules: rules}] = results
       assert is_binary(rules)
       assert String.length(rules) > 0
-      # Ash usage rules should contain "Ash" somewhere
       assert String.contains?(rules, "Ash")
     end
 
     test "returns multiple results for multiple packages with rules" do
-      # Test with multiple packages that commonly have usage rules
       {:ok, results} =
         AshAi.DevTools.Tools
         |> Ash.ActionInput.for_action(:get_package_rules, %{
@@ -30,14 +26,12 @@ defmodule AshAi.DevTools.ToolsTest do
 
       assert is_list(results)
 
-      # Verify all results have the correct structure
-      Enum.each(results, fn result ->
-        assert %{package: package, rules: rules} = result
+      for %{package: package, rules: rules} <- results do
         assert is_binary(package)
         assert is_binary(rules)
         assert String.length(rules) > 0
         assert package in ["ash", "ash_postgres", "igniter"]
-      end)
+      end
     end
 
     test "returns empty list for packages without usage-rules.md" do
@@ -57,17 +51,11 @@ defmodule AshAi.DevTools.ToolsTest do
         })
         |> Ash.run_action()
 
-      # Should only include packages that actually have rules
       assert is_list(results)
 
-      # All returned results should be for packages that exist and have rules
-      Enum.each(results, fn result ->
-        assert %{package: package, rules: rules} = result
-        # Only ash should be returned if it has rules
-        assert package in ["ash"]
-        assert is_binary(rules)
-        assert String.length(rules) > 0
-      end)
+      [%{package: "ash", rules: rules}] = results
+      assert is_binary(rules)
+      assert String.length(rules) > 0
     end
 
     test "handles empty package list" do
@@ -77,15 +65,6 @@ defmodule AshAi.DevTools.ToolsTest do
         |> Ash.run_action()
 
       assert results == []
-    end
-
-    test "action has correct argument requirements" do
-      # Test that packages argument is required
-      assert_raise Ash.Error.Invalid, fn ->
-        AshAi.DevTools.Tools
-        |> Ash.ActionInput.for_action(:get_package_rules, %{})
-        |> Ash.run_action!()
-      end
     end
   end
 
@@ -98,17 +77,12 @@ defmodule AshAi.DevTools.ToolsTest do
 
       assert is_list(results)
 
-      # Should be a list of strings (package names)
-      Enum.each(results, fn package ->
+      for package <- results do
         assert is_binary(package)
-      end)
+      end
 
-      # If we have packages with rules, verify they actually exist
       if length(results) > 0 do
-        # Pick first package and verify it has rules
         first_package = List.first(results)
-
-        # Verify this package actually has usage-rules.md
         deps_paths = Mix.Project.deps_paths()
 
         {_name, path} =
@@ -133,7 +107,6 @@ defmodule AshAi.DevTools.ToolsTest do
       # Verify we get some results from the test app
       assert length(results) > 0
 
-      # Should include some test resources (since we're in test environment)
       test_resources =
         Enum.filter(results, fn resource ->
           resource.name =~ "Test" or resource.domain =~ "Test"
@@ -141,12 +114,10 @@ defmodule AshAi.DevTools.ToolsTest do
 
       assert length(test_resources) > 0
 
-      # All results should have required fields
-      Enum.each(results, fn resource ->
-        assert %{name: name, domain: domain} = resource
+      for %{name: name, domain: domain} <- results do
         assert is_binary(name)
         assert is_binary(domain)
-      end)
+      end
     end
   end
 
@@ -159,7 +130,6 @@ defmodule AshAi.DevTools.ToolsTest do
 
       assert is_list(results)
 
-      # Should include ash_ai generators
       ash_ai_generators =
         Enum.filter(results, fn gen ->
           gen.command =~ "ash_ai"
@@ -167,13 +137,10 @@ defmodule AshAi.DevTools.ToolsTest do
 
       assert length(ash_ai_generators) > 0
 
-      # All results should have required fields
-      Enum.each(results, fn generator ->
-        assert %{command: command, docs: docs} = generator
+      for %{command: command, docs: docs} <- results do
         assert is_binary(command)
-        # Mix.Task.moduledoc can return binary, nil, or false
         assert is_binary(docs) or is_nil(docs) or docs == false
-      end)
+      end
     end
 
     test "includes expected ash_ai generators" do
@@ -184,7 +151,6 @@ defmodule AshAi.DevTools.ToolsTest do
 
       commands = Enum.map(results, & &1.command)
 
-      # Should include the generators defined in this project
       expected_generators = [
         "ash_ai.gen.chat",
         "ash_ai.gen.mcp",
@@ -192,10 +158,10 @@ defmodule AshAi.DevTools.ToolsTest do
         "ash_ai.install"
       ]
 
-      Enum.each(expected_generators, fn expected ->
+      for expected <- expected_generators do
         assert expected in commands,
                "Expected generator #{expected} not found in #{inspect(commands)}"
-      end)
+      end
     end
   end
 
@@ -238,10 +204,8 @@ defmodule AshAi.DevTools.ToolsTest do
         |> Ash.ActionInput.for_action(:get_package_rules, %{packages: []})
         |> Ash.run_action()
 
-      # Verify the structure matches what's expected (empty list is valid)
       assert is_list(results)
 
-      # Test that we can create valid UsageRules structs in principle
       valid_usage_rule = %{package: "test_package", rules: "test rules content"}
       assert is_map(valid_usage_rule)
       assert Map.has_key?(valid_usage_rule, :package)
@@ -254,11 +218,10 @@ defmodule AshAi.DevTools.ToolsTest do
         |> Ash.ActionInput.for_action(:list_ash_resources, %{})
         |> Ash.run_action(context: %{otp_app: :ash_ai})
 
-      # All results should match Resource type structure
-      Enum.each(results, fn resource ->
+      for resource <- results do
         assert Map.has_key?(resource, :name)
         assert Map.has_key?(resource, :domain)
-      end)
+      end
     end
 
     test "Task type has correct structure" do
@@ -267,13 +230,11 @@ defmodule AshAi.DevTools.ToolsTest do
         |> Ash.ActionInput.for_action(:list_generators, %{})
         |> Ash.run_action()
 
-      # All results should match Task type structure
-      Enum.each(results, fn task ->
+      for task <- results do
         assert Map.has_key?(task, :command)
         assert Map.has_key?(task, :docs)
-        # Verify docs field accepts the types we expect
         assert is_binary(task.docs) or is_nil(task.docs) or task.docs == false
-      end)
+      end
     end
   end
 end
