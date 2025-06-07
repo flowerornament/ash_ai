@@ -28,10 +28,10 @@ mix test.watch
 mix check
 
 # Format code
-mix spark.formatter
+mix format
 
 # Check formatting
-mix spark.formatter --check
+mix format --check
 
 # Run Credo for code analysis
 mix credo --strict
