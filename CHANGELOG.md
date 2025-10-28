@@ -11,6 +11,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.15](https://github.com/ash-project/ash_ai/compare/v0.2.14...v0.2.15) (2025-10-28)
+
+
+
+
+### Improvements:
+
+* update ash_oban to 0.5 by [@zachdaniel](https://github.com/zachdaniel)
+
 ## [v0.2.14](https://github.com/ash-project/ash_ai/compare/v0.2.13...v0.2.14) (2025-10-16)
 
 
