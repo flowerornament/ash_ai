@@ -521,6 +521,10 @@ defmodule AshAi.OpenApi do
     %{type: :string, format: :"date-time"}
   end
 
+  defp resource_attribute_type(%{type: Ash.Type.DateTime}, _resource) do
+    %{type: :string, format: :"date-time"}
+  end
+
   defp resource_attribute_type(%{type: Ash.Type.NaiveDatetime}, _resource) do
     %{type: :string, format: :"date-time"}
   end
