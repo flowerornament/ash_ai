@@ -346,7 +346,13 @@ defmodule AshAi.Mcp.Server do
 
       %{"method" => "tools/call", "id" => id, "params" => params} ->
         tool_name = params["name"]
-        tool_args = params["arguments"] || %{}
+
+        tool_args =
+          case params["arguments"] || %{} do
+            args when is_binary(args) -> Jason.decode!(args)
+            args when is_map(args) -> args
+            _ -> %{}
+          end
 
         with %Tool{} = tool <- find_tool_by_name(tool_name, session_id, opts),
              context = tool_context(opts),
