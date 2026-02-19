@@ -66,7 +66,12 @@ defmodule AshAi.Tools do
     actor = context[:actor]
     tenant = context[:tenant]
 
-    client_input = arguments["input"] || %{}
+    client_input =
+      case arguments["input"] || %{} do
+        input when is_binary(input) -> Jason.decode!(input)
+        input when is_map(input) -> input
+        _ -> %{}
+      end
 
     opts = [domain: domain, actor: actor, tenant: tenant, context: context[:context] || %{}]
 
